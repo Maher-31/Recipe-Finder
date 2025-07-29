@@ -1,6 +1,6 @@
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
-import BgVideo from './production_id_4058085 (2160p).mp4';
+
 import './DefaultViewPage.css'; 
 
 function DefaultViewPage() {
