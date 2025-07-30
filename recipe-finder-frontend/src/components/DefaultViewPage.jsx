@@ -6,9 +6,7 @@ import './DefaultViewPage.css';
 function DefaultViewPage() {
   return (
     <div className="bg-container">
-      <video autoPlay loop muted className="bg-vid">
-        <source src={BgVideo} type="video/mp4" />
-      </video>
+      
       <div className="content">
         <div className="centered">
           <h2>Welcome!</h2>

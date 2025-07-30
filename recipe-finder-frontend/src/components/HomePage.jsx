@@ -20,7 +20,7 @@ function HomePage() {
 
   const fetchRecipes = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/recipes');
+      const response = await axios.get('https://recipe-finder-5-gzng.onrender.com/recipes');
       setRecipes(response.data);
     } catch (error) {
       console.error('Error fetching recipes:', error);
@@ -34,7 +34,7 @@ function HomePage() {
         alert('Please fill in all fields');
         return;
       }
-      await axios.post('http://localhost:5000/recipes', { name: recipeName, components: components.split(','), procedure });
+      await axios.post('https://recipe-finder-5-gzng.onrender.com/recipes', { name: recipeName, components: components.split(','), procedure });
       alert('Recipe created successfully');
       fetchRecipes();
       setRecipeName('');
@@ -49,9 +49,9 @@ function HomePage() {
     try {
       let response;
       if (searchQuery) {
-        response = await axios.post('http://localhost:5000/search', { searchQuery });
+        response = await axios.post('https://recipe-finder-5-gzng.onrender.com/search', { searchQuery });
       } else {
-        response = await axios.get('http://localhost:5000/recipes');
+        response = await axios.get('https://recipe-finder-5-gzng.onrender.com/recipes');
       }
       setSearchResults(response.data);
     } catch (error) {

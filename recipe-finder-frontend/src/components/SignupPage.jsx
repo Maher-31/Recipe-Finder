@@ -9,7 +9,7 @@ function SignupPage() {
 
   const handleSignup = async () => {
     try {
-       const rese=await axios.post('http://localhost:5000/signup', { email, password });
+       const rese=await axios.post('https://recipe-finder-5-gzng.onrender.com/signup', { email, password });
       alert('Signup successful');
       if(!rese){
         throw new Error;

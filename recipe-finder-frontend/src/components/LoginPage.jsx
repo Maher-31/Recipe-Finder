@@ -9,7 +9,7 @@ function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/login', { email, password });
+      const response = await axios.post('https://recipe-finder-5-gzng.onrender.com/login', { email, password });
       const token = response.data.token;
       localStorage.setItem('token', token);
       // Redirect user to home page

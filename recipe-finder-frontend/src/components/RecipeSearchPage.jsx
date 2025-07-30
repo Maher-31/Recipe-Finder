@@ -9,7 +9,7 @@ function RecipeSearchPage() {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/search', { searchQuery });
+      const response = await axios.post('https://recipe-finder-5-gzng.onrender.com/search', { searchQuery });
       setSearchResults(response.data);
     } catch (error) {
       console.error('Error searching recipes:', error.response.data.message);
