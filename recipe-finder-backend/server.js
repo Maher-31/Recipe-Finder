@@ -1,4 +1,6 @@
 // server.js
+
+require('dotenv').config(); // Load env variables from .env
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -11,11 +13,12 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/recipeDB', {
+// Connect to MongoDB using the environment variable
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
@@ -39,7 +42,11 @@ app.post('/signup', async (req, res) => {
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    if (error.code === 11000) {  // Duplicate key error (email)
+      res.status(400).json({ message: 'Email already exists' });
+    } else {
+      res.status(500).json({ message: 'Server Error' });
+    }
   }
 });
 
@@ -54,7 +61,8 @@ app.post('/login', async (req, res) => {
     if (!validPassword) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
-    const token = jwt.sign({ userId: user._id }, 'secretKey', { expiresIn: '1h' });
+    // Sign JWT with secret from .env
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
   } catch (error) {
     console.error(error);
@@ -62,14 +70,16 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// Protect routes with JWT
+// Protect routes with JWT middleware
 function verifyToken(req, res, next) {
-  const token = req.headers.authorization?.split(' ')[1];
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1]; // Bearer token
+
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
   try {
-    const decoded = jwt.verify(token, 'secretKey');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.userId;
     next();
   } catch (error) {
@@ -113,11 +123,9 @@ app.post('/search', async (req, res) => {
   try {
     const { searchQuery } = req.body;
     if (!searchQuery) {
-      // If no search query provided, return all recipes
       const recipes = await Recipe.find();
       res.json(recipes);
     } else {
-      // Otherwise, perform the search based on the query
       const recipes = await Recipe.find({
         $or: [
           { name: { $regex: new RegExp(searchQuery, 'i') } },
