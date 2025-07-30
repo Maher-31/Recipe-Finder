@@ -1,5 +1,5 @@
 // App.jsx
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import SignupPage from './components/SignupPage';
 import HomePage from './components/HomePage';
@@ -8,14 +8,15 @@ import DefaultViewPage from './components/DefaultViewPage';
 function App() {
   return (
     <Router>
-      <Switch>
-        <Route path="/login" component={LoginPage} />
-        <Route path="/signup" component={SignupPage} />
-        <Route path="/home" component={HomePage} />
-        <Route path="/" component={DefaultViewPage} />
-      </Switch>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/" element={<DefaultViewPage />} />
+      </Routes>
     </Router>
   );
 }
 
 export default App;
+
